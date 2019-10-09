@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Container } from "reactstrap";
+import Calendar from "react-calendar";
+import axios from "axios";
+import WeatherInformation from "./WeatherInformation";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    date: new Date()
+  };
+
+  onChange = date => this.setState({ date });
+  render() {
+    axios
+      .post(`http://interview.com360degree.com/api/getWeather`, {
+        date: this.state
+      })
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+    return (
+      <Container>
+        <Calendar onChange={this.onChange} value={this.state.date} />
+        <WeatherInformation />
+      </Container>
+    );
+  }
 }
 
 export default App;

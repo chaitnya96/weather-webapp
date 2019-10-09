@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Label, Row, Col } from "antd";
+import { Card, Row, Col } from "antd";
 import moment from "moment";
 
 class WeatherInformation extends Component {
@@ -10,22 +10,27 @@ class WeatherInformation extends Component {
       selectedForecast: {}
     };
   }
-  componentDidMount() {
-    const { weatherData, date } = this.props;
-    const { forecast } = weatherData;
-    console.log(date, forecast.filter(data => data.date === date));
-  }
   componentWillReceiveProps(nextProps) {
     const { forecast, current } = this.props.weatherData;
     let date = moment(nextProps.date).format("YYYY-MM-DD");
     if (date != moment().format("YYYY-MM-DD")) {
-      let selectedForecast = forecast.filter(data => data.date === date)[0];
-      console.log(selectedForecast);
-      if (selectedForecast) {
-        this.setState({
-          isCurrentDate: false,
-          selectedForecast
-        });
+      if (forecast) {
+        let selectedForecast = forecast.filter(data => data.date === date)[0];
+        if (selectedForecast) {
+          this.setState({
+            isCurrentDate: false,
+            selectedForecast
+          });
+        } else {
+          this.setState({
+            isCurrentDate: false,
+            selectedForecast: {
+              ...current,
+              date,
+              day: moment(date).format("dddd")
+            }
+          });
+        }
       } else {
         this.setState({
           isCurrentDate: false,
@@ -38,14 +43,26 @@ class WeatherInformation extends Component {
       }
     } else {
       this.setState({
-        isCurrentDate: true
+        isCurrentDate: true,
+        current: {
+          ...current,
+          date,
+          day: moment(date).format("dddd")
+        }
       });
     }
   }
   getWeatherData = data => {
     // add the key name into dataToDisplay array to display that data
     // using this we removes unwanted data.
-    let dataToDisplay = ["day", "skytext", "skytextday", "date"];
+    let dataToDisplay = [
+      "day",
+      "skytext",
+      "skytextday",
+      "temperature",
+      "date",
+      "observationtime"
+    ];
     let weatherData = [];
     for (let key in data) {
       console.log(data);

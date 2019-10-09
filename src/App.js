@@ -15,7 +15,6 @@ class App extends React.Component {
   getDateDetails = date => {
     axios
       .post(`http://interview.com360degree.com/api/getWeather`, {
-        // date: new Date(2019, 9, 11, 22, 30, 30, 0)
         date
       })
       .then(res => {
@@ -23,12 +22,27 @@ class App extends React.Component {
           weatherData: res.data.data[0]
         });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err)
+
+        this.setState({
+          weatherData: {
+            current: {
+              date,
+              day: moment(date).format("dddd"),
+              skytext: 'Mostly Cloudy'
+            },
+            location: {
+              name: 'Bengaluru, India'
+            }
+          }
+        })
+
+      });
   };
   onPanelChange = date =>
     this.setState(
-      { date: moment(date).format("YYYY/MM/DD") },
-      this.getDateDetails(this.state.date)
+      { date: moment(date).format("YYYY/MM/DD") }
     );
   render() {
     const { weatherData, date } = this.state;
@@ -45,8 +59,8 @@ class App extends React.Component {
             {weatherData ? (
               <WeatherInformation weatherData={weatherData} date={date} />
             ) : (
-              <Spin size="large" />
-            )}
+                <Spin size="large" />
+              )}
           </Col>
         </Row>
       </div>

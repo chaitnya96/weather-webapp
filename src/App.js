@@ -1,5 +1,5 @@
 import React from "react";
-import { Calendar, Row, Col, Spin, Layout } from "antd";
+import { Calendar, Row, Col, Spin } from "antd";
 import axios from "axios";
 import WeatherInformation from "./WeatherInformation";
 import moment from "moment";
